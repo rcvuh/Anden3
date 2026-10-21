@@ -1,0 +1,22 @@
+@startuml
+!include style.iuml
+title Flujo de actividades: sincronización de la cola offline
+start
+:El pasajero vuelve a tener red\n(o desactiva el modo sin conexión);
+:ReportViewModel.syncPendingReportsNow();
+:getUnsyncedReports()\n(syncStatus = PENDIENTE_ROOM);
+while (¿Hay reportes pendientes?) is (sí)
+  if (¿Tiene foto o video local?) then (sí)
+    :Subir archivo a Cloud Storage\nanden_evidencias/{estación}/{uuid};
+  else (no)
+  endif
+  :Agregar documento en Firestore\ncon la URL de la evidencia;
+  if (¿Firestore confirmó?) then (sí)
+    :markReportSynced(id, SINCRONIZADO_FIRESTORE);
+  else (no)
+    :Permanece PENDIENTE_ROOM\npara el siguiente intento;
+  endif
+endwhile (no)
+:Snackbar "N reporte(s) subidos";
+stop
+@enduml

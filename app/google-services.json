@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1090793458791",
+    "firebase_url": "https://integracionfirebaseapp-default-rtdb.firebaseio.com",
+    "project_id": "integracionfirebaseapp",
+    "storage_bucket": "integracionfirebaseapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090793458791:android:d92dafee1403d2271f98c2",
+        "android_client_info": {
+          "package_name": "mx.uaemex.anden"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090793458791-v4p75j2urp86qet0u7o4rp5lfkqh333n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhc4SOpR8DqZpWlLlGuwDctVMxoGkGCVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090793458791-v4p75j2urp86qet0u7o4rp5lfkqh333n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,68 @@
+@startuml
+!include style.iuml
+title Flujo de actividades: reporte ciudadano de incidencia
+|Pasajero|
+start
+:Abre Andén;
+|App (Compose + ReportViewModel)|
+:Mostrar LoginFragment;
+|Pasajero|
+if (¿Cómo entra?) then (cuenta)
+  :Captura correo y contraseña;
+  |Firebase|
+  :signInWithEmailAndPassword();
+else (invitado)
+endif
+|App (Compose + ReportViewModel)|
+:Abrir MapHomeFragment;
+|Room / SQLite|
+:observeAllStations()\n(siembra el catálogo si está vacío);
+|App (Compose + ReportViewModel)|
+:Leer GPS con FusedLocationProviderClient\ny calcular distancia a la estación;
+|Pasajero|
+:Busca / filtra y elige una estación;
+|App (Compose + ReportViewModel)|
+:StationDetailFragment: horario, elevador,\nrampa, alimentadores y reportes < 30 min;
+|Pasajero|
+:Pulsa "Reportar estado de estación";
+|App (Compose + ReportViewModel)|
+if (¿Distancia <= 300 m?) then (no)
+  :Botón "Enviar" deshabilitado\ny aviso de geocerca;
+  stop
+else (sí)
+endif
+|Pasajero|
+:Elige categoría y escribe descripción;
+if (¿Agrega evidencia?) then (sí)
+  |App (Compose + ReportViewModel)|
+  if (¿Permiso CAMERA concedido?) then (no)
+    :Solicitar permiso\n(RequestMultiplePermissions);
+  else (sí)
+  endif
+  repeat
+    :CameraCaptureFragment (CameraX)\ntakePicture() -> archivo local;
+    :MediaPreviewFragment muestra la captura;
+    |Pasajero|
+  repeat while (¿Evidencia legible?) is (no: "Reintentar") not (sí: "Usar evidencia")
+else (no)
+endif
+|Pasajero|
+:Pulsa "Enviar reporte";
+|Room / SQLite|
+:insertReport(syncStatus = PENDIENTE_ROOM);
+:Actualizar semáforo de la estación\n(elevador / retraso);
+|App (Compose + ReportViewModel)|
+if (¿Hay conexión?) then (sí)
+  |Firebase|
+  :Subir evidencia a Cloud Storage;
+  :Crear documento en Firestore\n(colección reports, GeoPoint);
+  |Room / SQLite|
+  :markReportSynced(SINCRONIZADO_FIRESTORE);
+else (no)
+  |App (Compose + ReportViewModel)|
+  :Queda en cola local hasta\nrecuperar la conexión;
+endif
+|App (Compose + ReportViewModel)|
+:Snackbar con el resultado\ny regreso a la ficha;
+stop
+@enduml

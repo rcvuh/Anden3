@@ -1,0 +1,43 @@
+@startuml
+!include style.iuml
+title Flujo de actividades: moderación del administrador
+|Administrador|
+start
+:En LoginFragment pulsa\n"Portal Administrativo";
+|App|
+:Mostrar AdminLoginFragment;
+|Administrador|
+:Captura correo institucional y contraseña;
+|Firebase|
+:Autenticar (Firebase Auth);
+|App|
+if (¿Rol administrador?) then (no)
+  :Acceso denegado;\nregresar al login;
+  stop
+else (sí)
+endif
+:Abrir AdminDashboardFragment;
+|Room / SQLite|
+:observeAllCommunityStops()\nobserveAllReports();
+|App|
+:Mostrar pestañas "Paradas nuevas"\ny "Reportes dudosos";
+|Administrador|
+repeat
+  :Revisa evidencia, autor,\nhora y distancia GPS;
+  if (¿Información válida?) then (sí)
+    :Pulsa "Validar";
+    |Room / SQLite|
+    :Estado = APROBADO / VALIDADA;
+  else (no)
+    |Administrador|
+    :Pulsa "Descartar";
+    |Room / SQLite|
+    :Estado = DESCARTADO / DESCARTADA\n(deja de mostrarse a los pasajeros);
+  endif
+  |App|
+  :Snackbar de confirmación;
+  |Administrador|
+repeat while (¿Quedan elementos pendientes?) is (sí) not (no)
+:Regresa al mapa o cierra sesión;
+stop
+@enduml

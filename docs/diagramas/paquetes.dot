@@ -1,0 +1,35 @@
+digraph P {
+  rankdir=TB; graph [fontname="DejaVu Sans", dpi=200, nodesep=0.35, ranksep=0.55, compound=true, newrank=true];
+  node [shape=tab, style=filled, fontname="DejaVu Sans", fontsize=11, fillcolor="#FFF3F5", color="#7A1E3A", penwidth=1.3];
+  edge [style=dashed, color="#555555", arrowhead=vee, arrowsize=0.7, fontname="DejaVu Sans", fontsize=8];
+  subgraph cluster_app { label="mx.uaemex.anden"; fontname="DejaVu Sans Bold"; fontsize=13; style="rounded"; color="#7A1E3A";
+    root [label="mx.uaemex.anden\nMainActivity · NavHost (8 rutas)\n213 líneas"];
+    subgraph cluster_ui { label="Capa de presentación"; fontsize=11; style="rounded,dashed"; color="#B38E5D";
+      screens [label="ui.screens\nAndenScreens.kt: 8 pantallas\n1 907 líneas"];
+      vm [label="ui.viewmodel\nReportViewModel · AndenUiState\n281 líneas"];
+      theme [label="ui.theme\nAndenTheme (Material 3)\n43 líneas"];
+    }
+    subgraph cluster_dom { label="Lógica"; fontsize=11; style="rounded,dashed"; color="#1B6B3A";
+      domain [label="domain\nAndenRules (Kotlin puro)\n69 líneas", fillcolor="#E6F2EA", color="#1B6B3A"];
+      hw [label="hardware\nLocationGeofenceHelper · GpsReading\n133 líneas", fillcolor="#E6F2EA", color="#1B6B3A"];
+    }
+    subgraph cluster_data { label="Capa de datos"; fontsize=11; style="rounded,dashed"; color="#1F4E79";
+      repo [label="data.repository\nAndenRepository\n170 líneas", fillcolor="#E3ECF5", color="#1F4E79"];
+      db [label="data.local.database\nAndenDatabase + semilla\n254 líneas", fillcolor="#E3ECF5", color="#1F4E79"];
+      dao [label="data.local.dao\nAndenDao\n72 líneas", fillcolor="#E3ECF5", color="#1F4E79"];
+      ent [label="data.local.entity\nStation · PendingReport · CommunityStop\n67 líneas", fillcolor="#E3ECF5", color="#1F4E79"];
+    }
+  }
+  subgraph cluster_ext { label="Librerías externas"; fontsize=11; style="rounded"; color="#888888";
+    node [shape=box, style="rounded,filled", fillcolor="#F2F2F2", color="#888888"];
+    xc [label="Jetpack Compose · Material 3\nNavigation · Lifecycle"]; xcam [label="CameraX"]; xloc [label="Play Services\nLocation"];
+    xfb [label="Firebase Auth\nFirestore · Storage"]; xroom [label="Room (SQLite)"];
+  }
+  root -> screens; root -> vm; root -> theme;
+  screens -> vm; screens -> theme; screens -> ent [constraint=false];
+  vm -> repo; vm -> db; vm -> hw; vm -> domain; vm -> ent [constraint=false];
+  hw -> domain; hw -> ent; domain -> ent;
+  repo -> dao; repo -> ent; db -> dao; db -> ent; dao -> ent;
+  screens -> xc [style=dotted, color="#999999"]; screens -> xcam [style=dotted, color="#999999"];
+  hw -> xloc [style=dotted, color="#999999"]; repo -> xfb [style=dotted, color="#999999"]; dao -> xroom [style=dotted, color="#999999"]; db -> xroom [style=dotted, color="#999999"];
+}

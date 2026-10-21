@@ -1,0 +1,18 @@
+digraph C {
+  rankdir=LR; graph [fontname="DejaVu Sans", dpi=200, nodesep=0.35, ranksep=0.45, newrank=true];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, fillcolor="#FFF3F5", color="#7A1E3A", penwidth=1.3, width=1.7];
+  edge [color="#555555", arrowsize=0.8, fontname="DejaVu Sans", fontsize=9];
+  a [label="1. Planeación y\nanálisis de\nrequerimientos\n(T4.3 · hasta 07/10)"];
+  b [label="2. Diseño\nUX/UI y arquitectura\n(T4.5 · hasta 14/10)"];
+  subgraph cluster_it { label="Construcción iterativa e incremental (sprints semanales)"; fontname="DejaVu Sans Bold"; fontsize=11; style="rounded,dashed"; color="#B38E5D";
+    c [label="3. Implementación\nKotlin · Compose\nRoom · Firebase", fillcolor="#F5E6D3", color="#B38E5D"];
+    d [label="4. Pruebas\nunitarias y en\nemulador/dispositivo", fillcolor="#F5E6D3", color="#B38E5D"];
+    r [label="Revisión del\nincremento con la\nprofesora (T4.4–T4.7)", fillcolor="#F5E6D3", color="#B38E5D"];
+  }
+  e [label="5. Despliegue\nAPK firmado y\nexposición\n(09–12/11)", fillcolor="#E6F2EA", color="#1B6B3A"];
+  f [label="6. Mantenimiento\ncorrecciones y\nnuevas versiones", fillcolor="#E3ECF5", color="#1F4E79"];
+  a -> b -> c -> d -> r;
+  r -> c [label=" siguiente\n incremento", constraint=false, style=dashed];
+  r -> e -> f;
+  f -> a [label=" nuevos requerimientos", style=dotted, constraint=false];
+}
